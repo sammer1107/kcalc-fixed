@@ -404,14 +404,14 @@ uint64_t expr_eval(struct expr *e)
                               expr_eval(&e->param.op.args.buf[1])) &
                       (EQUAL)));
     case OP_BITWISE_AND: /* OK */
-        return expr_eval(&e->param.op.args.buf[0]) &
-               expr_eval(&e->param.op.args.buf[1]);
+        return GET_NUM(expr_eval(&e->param.op.args.buf[0])) &
+               GET_NUM(expr_eval(&e->param.op.args.buf[1]));
     case OP_BITWISE_OR: /* OK */
-        return expr_eval(&e->param.op.args.buf[0]) |
-               expr_eval(&e->param.op.args.buf[1]);
+        return GET_NUM(expr_eval(&e->param.op.args.buf[0])) |
+               GET_NUM(expr_eval(&e->param.op.args.buf[1]));
     case OP_BITWISE_XOR: /* OK */
-        return expr_eval(&e->param.op.args.buf[0]) ^
-               expr_eval(&e->param.op.args.buf[1]);
+        return GET_NUM(expr_eval(&e->param.op.args.buf[0])) ^
+               GET_NUM(expr_eval(&e->param.op.args.buf[1]));
     case OP_LOGICAL_AND: /* OK */
         n = expr_eval(&e->param.op.args.buf[0]);
         if (n) {
