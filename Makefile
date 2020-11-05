@@ -23,7 +23,7 @@ unload:
 check: all
 	scripts/test.sh
 
-eval: eval.c
+eval: eval.c fixed-point.h
 	$(CC) -o $@ $< -std=gnu11
 
 clean:
