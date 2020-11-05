@@ -8,6 +8,11 @@ EVAL=./eval
 NAN="NAN_INT"
 INF="INF_INT"
 
+declare -i fail_count
+declare -i test_count
+fail_count=0
+test_count=0
+
 test_op() {
     local expression=$1
     local ans=$2
@@ -25,7 +30,11 @@ test_op() {
     else 
         echo -e "\e[31mFAILED\e[0m"
         echo -e "Got" $ret "instead of" $ans
+        fail_count+=1
     fi
+
+    test_count+=1
+
     echo
 }
 
@@ -90,3 +99,5 @@ sudo rmmod calc
 
 # epilogue
 echo "Complete"
+
+echo $fail_count "of" $test_count "tests failed."
