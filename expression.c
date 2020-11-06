@@ -7,12 +7,7 @@
 #include <linux/module.h>
 #include <linux/string.h>
 
-#define MASK(n) (((n) > 0) << 4)
-/*
- * LSB 4 bits for precision, 2^3, one for sign
- * MSB 28 bits for integer
- * LSB all 1 is NaN
- */
+#define IS_TRUE(n) ((uint64_t)((n) != 0) << 32)
 
 /*
  * Expression data types
@@ -380,29 +375,29 @@ uint64_t expr_eval(struct expr *e)
         return right_shift(expr_eval(&e->param.op.args.buf[0]),
                            expr_eval(&e->param.op.args.buf[1]));
     case OP_LT: /* OK */
-        return MASK(compare(expr_eval(&e->param.op.args.buf[0]),
-                            expr_eval(&e->param.op.args.buf[1])) &
-                    (LOWER));
+        return IS_TRUE(compare(expr_eval(&e->param.op.args.buf[0]),
+                               expr_eval(&e->param.op.args.buf[1])) &
+                       (LOWER));
     case OP_LE: /* OK */
-        return MASK(compare(expr_eval(&e->param.op.args.buf[0]),
-                            expr_eval(&e->param.op.args.buf[1])) &
-                    (LOWER | EQUAL));
+        return IS_TRUE(compare(expr_eval(&e->param.op.args.buf[0]),
+                               expr_eval(&e->param.op.args.buf[1])) &
+                       (LOWER | EQUAL));
     case OP_GT: /* OK */
-        return MASK(compare(expr_eval(&e->param.op.args.buf[0]),
-                            expr_eval(&e->param.op.args.buf[1])) &
-                    (GREATER));
+        return IS_TRUE(compare(expr_eval(&e->param.op.args.buf[0]),
+                               expr_eval(&e->param.op.args.buf[1])) &
+                       (GREATER));
     case OP_GE: /* OK */
-        return MASK(compare(expr_eval(&e->param.op.args.buf[0]),
-                            expr_eval(&e->param.op.args.buf[1])) &
-                    (GREATER | EQUAL));
+        return IS_TRUE(compare(expr_eval(&e->param.op.args.buf[0]),
+                               expr_eval(&e->param.op.args.buf[1])) &
+                       (GREATER | EQUAL));
     case OP_EQ: /* OK */
-        return MASK(compare(expr_eval(&e->param.op.args.buf[0]),
-                            expr_eval(&e->param.op.args.buf[1])) &
-                    (EQUAL));
+        return IS_TRUE(compare(expr_eval(&e->param.op.args.buf[0]),
+                               expr_eval(&e->param.op.args.buf[1])) &
+                       (EQUAL));
     case OP_NE: /* OK */
-        return MASK(!(compare(expr_eval(&e->param.op.args.buf[0]),
-                              expr_eval(&e->param.op.args.buf[1])) &
-                      (EQUAL)));
+        return IS_TRUE(!(compare(expr_eval(&e->param.op.args.buf[0]),
+                                 expr_eval(&e->param.op.args.buf[1])) &
+                         (EQUAL)));
     case OP_BITWISE_AND: /* OK */
         return GET_NUM(expr_eval(&e->param.op.args.buf[0])) &
                GET_NUM(expr_eval(&e->param.op.args.buf[1]));
