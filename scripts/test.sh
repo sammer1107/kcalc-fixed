@@ -16,7 +16,6 @@ test_count=0
 test_op() {
     local expression=$1
     local ans=$2
-    echo -n "Testing " ${expression} "... "
     echo -ne ${expression}'\0' > $CALC_DEV
     local ret=$($EVAL $(cat $CALC_DEV))
 
@@ -25,17 +24,21 @@ test_op() {
     fi
 
     if [ "$ret" = "$ans" ]; then
-        echo -e "\e[32mPASSED\e[0m"
-        echo -e "==" $ans
+        if [ $VERBOSE ]; then
+            echo -n "Test:" ${expression} "=> "
+            echo -e "\e[32mPASSED\e[0m"
+            echo -e "==" $ans
+            echo
+        fi
     else 
+        echo -n "Test:" ${expression} "=> "
         echo -e "\e[31mFAILED\e[0m"
         echo -e "Got" $ret "instead of" $ans
+        echo
         fail_count+=1
     fi
 
     test_count+=1
-
-    echo
 }
 
 if [ "$EUID" -eq 0 ]
@@ -107,9 +110,13 @@ test_op 'Sigma(i,10,-10,i**2)' 0
 test_op 'Sigma(10,10,-10,i)' $NAN
 
 
+
 sudo rmmod calc
 
 # epilogue
-echo "Complete"
-
-echo $fail_count "of" $test_count "tests failed."
+echo "Completed."
+if [ $fail_count -gt "0" ]; then
+    echo $fail_count "of" $test_count "tests failed."
+else
+    echo "All test cases passed."
+fi
