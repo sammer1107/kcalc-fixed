@@ -101,6 +101,12 @@ test_op '$(number, 1), $(number, 2+3), number()' 5
 # pre-defined function
 test_op 'nop()' 0
 
+# Sigma function
+test_op 'Sigma(i,1,10,i)' 55
+test_op 'Sigma(i,10,-10,i**2)' 0
+test_op 'Sigma(10,10,-10,i)' $NAN
+
+
 sudo rmmod calc
 
 # epilogue

@@ -10,6 +10,7 @@
 
 #include <linux/string.h> /* for memset() and memcpy() */
 #include "expression.h"
+#include "fixed-point.h"
 
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_AUTHOR("National Cheng Kung University, Taiwan");
@@ -118,8 +119,37 @@ noinline uint64_t user_func_nop(struct expr_func *f, vec_expr_t args, void *c)
     return 0;
 }
 
+
+noinline uint64_t user_func_sigma(struct expr_func *f,
+                                  vec_expr_t args,
+                                  void *ctx)
+{
+    if (vec_len(&args) < 4) {
+        return NAN_INT;
+    }
+
+    struct expr loop_var = vec_nth(&args, 0);
+    int64_t start = expr_eval(&vec_nth(&args, 1));
+    int64_t end = expr_eval(&vec_nth(&args, 2));
+    struct expr n_expr = vec_nth(&args, 3);
+
+    if (loop_var.type != OP_VAR) {
+        return NAN_INT;
+    }
+    uint64_t sum = 0;
+
+    for (int64_t i = start; i <= end; i += ((uint64_t) 1 << 32)) {
+        *(loop_var.param.var.value) = *(uint64_t *) &i;
+        sum += expr_eval(&n_expr);
+    }
+
+    return sum;
+}
+
+
 static struct expr_func user_funcs[] = {
     {"nop", user_func_nop, user_func_nop_cleanup, 0},
+    {"Sigma", user_func_sigma, user_func_nop_cleanup, 0},
     {NULL, NULL, NULL, 0},
 };
 

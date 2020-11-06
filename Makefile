@@ -1,7 +1,8 @@
 KDIR=/lib/modules/$(shell uname -r)/build
 
+SRCS = main.c fixed-point.c eval.c expression.c
 obj-m += calc.o
-calc-objs += main.o expression.o
+calc-objs += main.o expression.o fixed-point.o
 ccflags-y := -std=gnu99 -Wno-declaration-after-statement
 
 GIT_HOOKS := .git/hooks/applied
@@ -23,8 +24,11 @@ unload:
 check: all
 	scripts/test.sh
 
-eval: eval.c fixed-point.h
-	$(CC) -o $@ $< -std=gnu11
+%.o: %.c
+	$(CC) -c -o $@ $^
+
+eval: eval.o fixed-point.o
+	$(CC) -o $@ $^ -std=gnu11
 
 clean:
 	make -C $(KDIR) M=$(PWD) clean

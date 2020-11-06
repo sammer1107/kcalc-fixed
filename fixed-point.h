@@ -7,8 +7,8 @@
 #include <stdint.h>
 #endif
 
-const uint64_t INF_INT = 9223372036854775808U;
-const uint64_t NAN_INT = 1U;
+extern const uint64_t INF_INT;
+extern const uint64_t NAN_INT;
 
 typedef union __fixedp {
     struct {
