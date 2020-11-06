@@ -321,9 +321,11 @@ static uint64_t minus(uint64_t a, uint64_t b)
     return a - b;
 }
 
-static int compare(uint64_t a, uint64_t b)
+static int compare(uint64_t ua, uint64_t ub)
 {
     int flags = 0;
+    int64_t a = ua, b = ub;
+
     if (a < b)
         flags |= LOWER;
     if (a > b)

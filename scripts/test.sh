@@ -51,6 +51,12 @@ sudo insmod $CALC_MOD
 sudo chmod 0666 $CALC_DEV
 echo
 
+# test numerical format and comparison
+test_op '777.7777777' 777.7777777
+test_op '520 > 78' 1
+test_op '-520 < 78' 1
+test_op '-520 < -78' 1
+
 # multiply
 test_op '6*7' 42
 
