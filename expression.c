@@ -27,9 +27,9 @@ static uint64_t GET_FRAC(uint64_t n)
     return num.data;
 }
 
-static int isNan(int x)
+static int isNan(uint64_t x)
 {
-    return GET_FRAC(x) == GET_FRAC(NAN_INT);
+    return x == NAN_INT;
 }
 
 enum compare_type { LOWER = 1, EQUAL = 2, GREATER = 4 };
