@@ -136,11 +136,15 @@ noinline uint64_t user_func_sigma(struct expr_func *f,
     if (loop_var.type != OP_VAR) {
         return NAN_INT;
     }
-    uint64_t sum = 0;
 
+    uint64_t sum = 0;
     for (int64_t i = start; i <= end; i += ((uint64_t) 1 << 32)) {
         *(loop_var.param.var.value) = *(uint64_t *) &i;
-        sum += expr_eval(&n_expr);
+        uint64_t value = expr_eval(&n_expr);
+        if (value == NAN_INT || value == INF_INT) {
+            return value;
+        }
+        sum += value;
     }
 
     return sum;

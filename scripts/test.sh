@@ -107,6 +107,7 @@ test_op 'nop()' 0
 # Sigma function
 test_op 'Sigma(i,1,10,i)' 55
 test_op 'Sigma(i,10,-10,i**2)' 0
+test_op 'Sigma(i,-10,9,i)' -10
 test_op 'Sigma(10,10,-10,i)' $NAN
 
 
